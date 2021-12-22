@@ -2,6 +2,7 @@ package com.djontleman.spacebooking.genericspaceship;
 
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
+import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,13 @@ import java.util.Optional;
 public class GenericSpaceshipService {
 
     public GenericSpaceshipDAO genericSpaceshipDAO;
+    public SpaceshipDAO spaceshipDAO;
 
     @Autowired
-    public GenericSpaceshipService(@Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO) {
+    public GenericSpaceshipService(@Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO,
+                                   @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO) {
         this.genericSpaceshipDAO = genericSpaceshipDAO;
+        this.spaceshipDAO = spaceshipDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -41,15 +45,29 @@ public class GenericSpaceshipService {
     // || ====================== Read/GET ====================== ||
 
     public List<GenericSpaceship> getAllGenericSpaceships() {
-        return genericSpaceshipDAO.getAllGenericSpaceships();
+        List<GenericSpaceship> genericSpaceships = genericSpaceshipDAO.getAllGenericSpaceships();
+
+        genericSpaceships.forEach(genericSpaceship -> {
+            genericSpaceship.setSpaceshipsList(
+                    spaceshipDAO.getSpaceshipsByGenericSpaceshipId(genericSpaceship.getId())
+            );
+        });
+
+        return genericSpaceships;
     }
 
     public Optional<GenericSpaceship> getGenericSpaceshipById(Long id) {
-        Optional<GenericSpaceship> genericSpaceship = genericSpaceshipDAO.getGenericSpaceshipById(id);
-        if (genericSpaceship.isEmpty()) {
+        Optional<GenericSpaceship> genericSpaceshipOptional = genericSpaceshipDAO.getGenericSpaceshipById(id);
+        if (genericSpaceshipOptional.isEmpty()) {
             throw new ResourceNotFoundException("No generic spaceship with ID: " + id);
         }
-        return genericSpaceship;
+
+        GenericSpaceship genericSpaceship = genericSpaceshipOptional.get();
+        genericSpaceship.setSpaceshipsList(
+                spaceshipDAO.getSpaceshipsByGenericSpaceshipId(genericSpaceship.getId())
+        );
+
+        return Optional.of(genericSpaceship);
     }
 
     // || ====================== Update/PUT/PATCH ====================== ||

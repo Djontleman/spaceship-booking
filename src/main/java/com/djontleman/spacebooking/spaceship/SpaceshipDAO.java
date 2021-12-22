@@ -15,6 +15,7 @@ public interface SpaceshipDAO {
 
     public List<Spaceship> getAllSpaceships();
     public Optional<Spaceship> getSpaceshipById(Long id);
+    public List<Spaceship> getSpaceshipsByGenericSpaceshipId(Long id);
 
     // || ====================== Update/PUT/PATCH ====================== ||
 

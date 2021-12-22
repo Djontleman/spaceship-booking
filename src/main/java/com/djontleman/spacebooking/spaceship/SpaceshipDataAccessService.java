@@ -49,6 +49,15 @@ public class SpaceshipDataAccessService implements SpaceshipDAO {
                 .findFirst();
     }
 
+    @Override
+    public List<Spaceship> getSpaceshipsByGenericSpaceshipId(Long id) {
+        String sql = """
+                SELECT * FROM spaceships
+                WHERE generic_spaceship_id = ?
+                """;
+        return jdbcTemplate.query(sql, rowMapper, id);
+    }
+
     // || ====================== Update/PUT/PATCH ====================== ||
 
     @Override
