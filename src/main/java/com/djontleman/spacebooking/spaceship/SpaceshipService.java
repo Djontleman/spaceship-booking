@@ -35,6 +35,8 @@ public class SpaceshipService {
             throw new BadRequestException("Generic spaceship ID cannot be empty");
         } else if (spaceship.getGenericSpaceshipId() <= 0) {
             throw new BadRequestException("Generic spaceship ID cannot be zero or less");
+        } else {
+            genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId());
         }
 
         return spaceshipDAO.createSpaceship(spaceship);
@@ -80,6 +82,8 @@ public class SpaceshipService {
             throw new BadRequestException("Generic spaceship ID cannot be empty");
         } else if (spaceship.getGenericSpaceshipId() <= 0) {
             throw new BadRequestException("Generic spaceship ID cannot be zero or less");
+        } else {
+            genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId());
         }
 
         // find old resource
