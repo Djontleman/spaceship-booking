@@ -14,6 +14,6 @@ public class Spaceship {
     private Long id;
     private String callSign;
     private Long genericSpaceshipId;
-    @JsonIgnoreProperties("id")
+    @JsonIgnoreProperties({"id", "spaceshipsList"})
     private GenericSpaceship genericSpaceship;
 }

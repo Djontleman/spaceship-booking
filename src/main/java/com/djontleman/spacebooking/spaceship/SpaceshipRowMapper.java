@@ -1,10 +1,12 @@
 package com.djontleman.spacebooking.spaceship;
 
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Component
 public class SpaceshipRowMapper implements RowMapper {
 
     @Override
