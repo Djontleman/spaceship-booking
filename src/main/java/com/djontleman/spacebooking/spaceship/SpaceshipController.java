@@ -21,7 +21,7 @@ public class SpaceshipController {
     // || ====================== Create/POST ====================== ||
 
     @PostMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createSpaceship(@RequestBody Spaceship spaceship) {
         spaceshipService.createSpaceship(spaceship);
     }
@@ -36,7 +36,7 @@ public class SpaceshipController {
 
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<Spaceship> getSpaceshipById(Long id) {
+    public Optional<Spaceship> getSpaceshipById(@PathVariable("id") Long id) {
         return spaceshipService.getSpaceshipById(id);
     }
 
@@ -44,7 +44,7 @@ public class SpaceshipController {
 
     @PostMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateSpaceship(Long id, Spaceship spaceship) {
+    public void updateSpaceship(@PathVariable("id") Long id, @RequestBody Spaceship spaceship) {
         spaceshipService.updateSpaceship(id, spaceship);
     }
 
@@ -52,7 +52,7 @@ public class SpaceshipController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteSpaceship(Long id) {
+    public void deleteSpaceship(@PathVariable("id") Long id) {
         spaceshipService.deleteSpaceship(id);
     }
 }

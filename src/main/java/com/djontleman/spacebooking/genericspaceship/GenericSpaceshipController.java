@@ -24,7 +24,7 @@ public class GenericSpaceshipController {
     // || ====================== Create/POST ====================== ||
 
     @PostMapping
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseStatus(HttpStatus.CREATED)
     public void createGenericSpaceship(@RequestBody GenericSpaceship genericSpaceship) {
         genericSpaceshipService.createGenericSpaceship(genericSpaceship);
     }
@@ -39,7 +39,7 @@ public class GenericSpaceshipController {
 
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<GenericSpaceship> getGenericSpaceshipById(Long id) {
+    public Optional<GenericSpaceship> getGenericSpaceshipById(@PathVariable("id") Long id) {
         return genericSpaceshipService.getGenericSpaceshipById(id);
     }
 
@@ -47,7 +47,7 @@ public class GenericSpaceshipController {
 
     @PostMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateGenericSpaceship(Long id, GenericSpaceship genericSpaceship) {
+    public void updateGenericSpaceship(@PathVariable("id") Long id, @RequestBody GenericSpaceship genericSpaceship) {
         genericSpaceshipService.updateGenericSpaceship(id, genericSpaceship);
     }
 
@@ -55,7 +55,7 @@ public class GenericSpaceshipController {
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteGenericSpaceship(Long id) {
+    public void deleteGenericSpaceship(@PathVariable("id") Long id) {
         genericSpaceshipService.deleteGenericSpaceship(id);
     }
 }
