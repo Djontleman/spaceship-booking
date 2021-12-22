@@ -97,7 +97,7 @@ public class SpaceshipService {
 
     // || ====================== Delete/DELETE ====================== ||
 
-    public int deleteGenericSpaceship(Long id) {
+    public int deleteSpaceship(Long id) {
         Optional<Spaceship> spaceship = spaceshipDAO.getSpaceshipById(id);
         if (spaceship.isEmpty()) {
             throw new ResourceNotFoundException("No spaceship with ID: " + id);
