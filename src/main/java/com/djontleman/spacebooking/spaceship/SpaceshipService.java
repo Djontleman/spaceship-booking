@@ -15,10 +15,13 @@ import java.util.Optional;
 public class SpaceshipService {
 
     public SpaceshipDAO spaceshipDAO;
+    public GenericSpaceshipDAO genericSpaceshipDAO;
 
     @Autowired
-    public SpaceshipService(@Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO) {
+    public SpaceshipService(@Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO,
+                            @Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO) {
         this.spaceshipDAO = spaceshipDAO;
+        this.genericSpaceshipDAO = genericSpaceshipDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -40,15 +43,29 @@ public class SpaceshipService {
     // || ====================== Read/GET ====================== ||
 
     public List<Spaceship> getAllSpaceships() {
-        return spaceshipDAO.getAllSpaceships();
+        List<Spaceship> spaceships = spaceshipDAO.getAllSpaceships();
+
+        spaceships.forEach(spaceship -> {
+            spaceship.setGenericSpaceship(
+                genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
+            );
+        });
+
+        return spaceships;
     }
 
     public Optional<Spaceship> getSpaceshipById(Long id) {
-        Optional<Spaceship> spaceship = spaceshipDAO.getSpaceshipById(id);
-        if (spaceship.isEmpty()) {
+        Optional<Spaceship> spaceshipOptional = spaceshipDAO.getSpaceshipById(id);
+        if (spaceshipOptional.isEmpty()) {
             throw new ResourceNotFoundException("No spaceship with ID: " + id);
         }
-        return spaceship;
+
+        Spaceship spaceship = spaceshipOptional.get();
+        spaceship.setGenericSpaceship(
+                genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
+        );
+
+        return Optional.of(spaceship);
     }
 
     // || ====================== Update/PUT/PATCH ====================== ||
