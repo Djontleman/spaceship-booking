@@ -2,6 +2,7 @@ package com.djontleman.spacebooking.spaceship;
 
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
+import com.djontleman.spacebooking.flight.FlightDAO;
 import com.djontleman.spacebooking.genericspaceship.GenericSpaceship;
 import com.djontleman.spacebooking.genericspaceship.GenericSpaceshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,15 @@ public class SpaceshipService {
 
     public SpaceshipDAO spaceshipDAO;
     public GenericSpaceshipDAO genericSpaceshipDAO;
+    public FlightDAO flightDAO;
 
     @Autowired
     public SpaceshipService(@Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO,
-                            @Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO) {
+                            @Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO,
+                            @Qualifier("postgresFlight") FlightDAO flightDAO) {
         this.spaceshipDAO = spaceshipDAO;
         this.genericSpaceshipDAO = genericSpaceshipDAO;
+        this.flightDAO = flightDAO;
     }
 
     // || ====================== Create/POST ====================== ||
