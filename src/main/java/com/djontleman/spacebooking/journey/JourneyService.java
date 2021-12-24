@@ -2,6 +2,7 @@ package com.djontleman.spacebooking.journey;
 
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
+import com.djontleman.spacebooking.flight.Flight;
 import com.djontleman.spacebooking.flight.FlightDAO;
 import com.djontleman.spacebooking.spaceship.Spaceship;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +42,27 @@ public class JourneyService {
     // || ====================== Read/GET ====================== ||
 
     public List<Journey> getAllJourneys() {
-        return journeyDAO.getAllJourneys();
+        List<Journey> journeys = journeyDAO.getAllJourneys();
+
+        journeys.forEach(journey -> {
+            List<Flight> flightList = flightDAO.getFlightsByJourneyId(journey.getId());
+            journey.setFlightList(flightList);
+        });
+
+        return journeys;
     }
 
     public Optional<Journey> getJourneyById(Long id) {
-        Optional<Journey> journey = journeyDAO.getJourneyById(id);
-        if (journey.isEmpty()) {
+        Optional<Journey> journeyOptional = journeyDAO.getJourneyById(id);
+        if (journeyOptional.isEmpty()) {
             throw new ResourceNotFoundException("No journey with ID: " + id);
         }
-        return journeyDAO.getJourneyById(id);
+
+        Journey journey = journeyOptional.get();
+        List<Flight> flightList = flightDAO.getFlightsByJourneyId(journey.getId());
+        journey.setFlightList(flightList);
+
+        return Optional.of(journey);
     }
 
     // || ====================== Update/PUT/PATCH ====================== ||

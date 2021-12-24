@@ -32,6 +32,8 @@ public class FlightService {
             throw new BadRequestException("Journey ID cannot be empty");
         } else if (flight.getJourneyId() <= 0) {
             throw new BadRequestException("Journey ID cannot be zero or less");
+        } else {
+            journeyDAO.getJourneyById(flight.getJourneyId());
         }
 
         if (flight.getSpaceshipId() == null) {
@@ -46,16 +48,29 @@ public class FlightService {
     // || ====================== Read/GET ====================== ||
 
     public List<Flight> getAllFlights() {
-        return flightDAO.getAllFlights();
+        List<Flight> flights = flightDAO.getAllFlights();
+
+        flights.forEach(flight -> {
+            flight.setJourney(
+                    journeyDAO.getJourneyById(flight.getJourneyId()).get()
+            );
+        });
+
+        return flights;
     }
 
     public Optional<Flight> getFlightById(Long id) {
-        Optional<Flight> flight = flightDAO.getFlightById(id);
-        if (flight.isEmpty()) {
+        Optional<Flight> flightOptional = flightDAO.getFlightById(id);
+        if (flightOptional.isEmpty()) {
             throw new ResourceNotFoundException("No flight with ID: " + id);
         }
 
-        return flightDAO.getFlightById(id);
+        Flight flight = flightOptional.get();
+        flight.setJourney(
+                journeyDAO.getJourneyById(flight.getJourneyId()).get()
+        );
+
+        return Optional.of(flight);
     }
 
     // || ====================== Update/PUT/PATCH ====================== ||
@@ -66,6 +81,8 @@ public class FlightService {
             throw new BadRequestException("Journey ID cannot be empty");
         } else if (flight.getJourneyId() <= 0) {
             throw new BadRequestException("Journey ID cannot be zero or less");
+        } else {
+            journeyDAO.getJourneyById(flight.getJourneyId());
         }
 
         if (flight.getSpaceshipId() == null) {
