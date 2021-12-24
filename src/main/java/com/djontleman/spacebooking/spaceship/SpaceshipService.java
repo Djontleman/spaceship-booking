@@ -2,6 +2,7 @@ package com.djontleman.spacebooking.spaceship;
 
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
+import com.djontleman.spacebooking.flight.Flight;
 import com.djontleman.spacebooking.flight.FlightDAO;
 import com.djontleman.spacebooking.genericspaceship.GenericSpaceship;
 import com.djontleman.spacebooking.genericspaceship.GenericSpaceshipDAO;
@@ -55,6 +56,9 @@ public class SpaceshipService {
             spaceship.setGenericSpaceship(
                 genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
             );
+
+            List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+            spaceship.setFlightList(flightList);
         });
 
         return spaceships;
@@ -70,6 +74,9 @@ public class SpaceshipService {
         spaceship.setGenericSpaceship(
                 genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
         );
+
+        List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+        spaceship.setFlightList(flightList);
 
         return Optional.of(spaceship);
     }

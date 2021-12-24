@@ -44,6 +44,8 @@ public class FlightService {
             throw new BadRequestException("Spaceship ID cannot be empty");
         } else if (flight.getSpaceshipId() <= 0) {
             throw new BadRequestException("Spaceship ID cannot be zero or less");
+        } else {
+            spaceshipDAO.getSpaceshipById(flight.getSpaceshipId());
         }
 
         return flightDAO.createFlight(flight);
@@ -57,6 +59,9 @@ public class FlightService {
         flights.forEach(flight -> {
             flight.setJourney(
                     journeyDAO.getJourneyById(flight.getJourneyId()).get()
+            );
+            flight.setSpaceship(
+                    spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get()
             );
         });
 
@@ -72,6 +77,9 @@ public class FlightService {
         Flight flight = flightOptional.get();
         flight.setJourney(
                 journeyDAO.getJourneyById(flight.getJourneyId()).get()
+        );
+        flight.setSpaceship(
+                spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get()
         );
 
         return Optional.of(flight);
@@ -93,6 +101,8 @@ public class FlightService {
             throw new BadRequestException("Spaceship ID cannot be empty");
         } else if (flight.getSpaceshipId() <= 0) {
             throw new BadRequestException("Spaceship ID cannot be zero or less");
+        } else {
+            spaceshipDAO.getSpaceshipById(flight.getSpaceshipId());
         }
 
         // find old resource
