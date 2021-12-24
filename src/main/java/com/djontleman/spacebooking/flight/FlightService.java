@@ -2,6 +2,7 @@ package com.djontleman.spacebooking.flight;
 
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
+import com.djontleman.spacebooking.genericspaceship.GenericSpaceshipDAO;
 import com.djontleman.spacebooking.journey.JourneyDAO;
 import com.djontleman.spacebooking.spaceship.Spaceship;
 import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
@@ -18,14 +19,17 @@ public class FlightService {
     private FlightDAO flightDAO;
     private JourneyDAO journeyDAO;
     private SpaceshipDAO spaceshipDAO;
+    private GenericSpaceshipDAO genericSpaceshipDAO;
 
     @Autowired
     public FlightService(@Qualifier("postgresFlight") FlightDAO flightDAO,
                          @Qualifier("postgresJourney") JourneyDAO journeyDAO,
-                         @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO) {
+                         @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO,
+                         @Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO) {
         this.flightDAO = flightDAO;
         this.journeyDAO = journeyDAO;
         this.spaceshipDAO = spaceshipDAO;
+        this.genericSpaceshipDAO = genericSpaceshipDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -60,9 +64,12 @@ public class FlightService {
             flight.setJourney(
                     journeyDAO.getJourneyById(flight.getJourneyId()).get()
             );
-            flight.setSpaceship(
-                    spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get()
+
+            Spaceship spaceship = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get();
+            spaceship.setGenericSpaceship(
+                    genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
             );
+            flight.setSpaceship(spaceship);
         });
 
         return flights;
@@ -78,9 +85,12 @@ public class FlightService {
         flight.setJourney(
                 journeyDAO.getJourneyById(flight.getJourneyId()).get()
         );
-        flight.setSpaceship(
-                spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get()
+
+        Spaceship spaceship = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get();
+        spaceship.setGenericSpaceship(
+                genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
         );
+        flight.setSpaceship(spaceship);
 
         return Optional.of(flight);
     }

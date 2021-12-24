@@ -2,6 +2,8 @@ package com.djontleman.spacebooking.genericspaceship;
 
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
+import com.djontleman.spacebooking.flight.Flight;
+import com.djontleman.spacebooking.flight.FlightDAO;
 import com.djontleman.spacebooking.spaceship.Spaceship;
 import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +18,15 @@ public class GenericSpaceshipService {
 
     public GenericSpaceshipDAO genericSpaceshipDAO;
     public SpaceshipDAO spaceshipDAO;
+    public FlightDAO flightDAO;
 
     @Autowired
     public GenericSpaceshipService(@Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO,
-                                   @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO) {
+                                   @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO,
+                                   @Qualifier("postgresFlight") FlightDAO flightDAO) {
         this.genericSpaceshipDAO = genericSpaceshipDAO;
         this.spaceshipDAO = spaceshipDAO;
+        this.flightDAO = flightDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -49,9 +54,14 @@ public class GenericSpaceshipService {
         List<GenericSpaceship> genericSpaceships = genericSpaceshipDAO.getAllGenericSpaceships();
 
         genericSpaceships.forEach(genericSpaceship -> {
-            genericSpaceship.setSpaceshipsList(
-                    spaceshipDAO.getSpaceshipsByGenericSpaceshipId(genericSpaceship.getId())
-            );
+            List<Spaceship> spaceshipList = spaceshipDAO.getSpaceshipsByGenericSpaceshipId(genericSpaceship.getId());
+
+            spaceshipList.forEach(spaceship -> {
+                List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+                spaceship.setFlightList(flightList);
+            });
+
+            genericSpaceship.setSpaceshipsList(spaceshipList);
         });
 
         return genericSpaceships;
@@ -64,9 +74,14 @@ public class GenericSpaceshipService {
         }
 
         GenericSpaceship genericSpaceship = genericSpaceshipOptional.get();
-        genericSpaceship.setSpaceshipsList(
-                spaceshipDAO.getSpaceshipsByGenericSpaceshipId(genericSpaceship.getId())
-        );
+        List<Spaceship> spaceshipList = spaceshipDAO.getSpaceshipsByGenericSpaceshipId(genericSpaceship.getId());
+
+        spaceshipList.forEach(spaceship -> {
+            List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+            spaceship.setFlightList(flightList);
+        });
+
+        genericSpaceship.setSpaceshipsList(spaceshipList);
 
         return Optional.of(genericSpaceship);
     }
