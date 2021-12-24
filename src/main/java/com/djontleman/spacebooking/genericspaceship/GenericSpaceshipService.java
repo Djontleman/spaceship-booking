@@ -2,6 +2,7 @@ package com.djontleman.spacebooking.genericspaceship;
 
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
+import com.djontleman.spacebooking.spaceship.Spaceship;
 import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -103,6 +104,14 @@ public class GenericSpaceshipService {
         if (genericSpaceship.isEmpty()) {
             throw new ResourceNotFoundException("No generic spaceship with ID: " + id);
         }
+
+        List<Spaceship> spaceshipList = spaceshipDAO.getSpaceshipsByGenericSpaceshipId(id);
+        if (spaceshipList.size() > 0) {
+            throw new BadRequestException(
+                    "Cannot delete as generic spaceship with ID: " + id + " has been assigned to spaceships"
+            );
+        }
+
         return genericSpaceshipDAO.deleteGenericSpaceship(id);
     }
 }
