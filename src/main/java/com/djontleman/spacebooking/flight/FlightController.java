@@ -1,5 +1,9 @@
 package com.djontleman.spacebooking.flight;
 
+import com.djontleman.spacebooking.journey.Journey;
+import com.djontleman.spacebooking.spaceship.Spaceship;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +26,12 @@ public class FlightController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createFlight(@RequestBody Flight flight) {
+    public void createFlight(@RequestBody FlightDTO flightDTO) {
+        Flight flight = new Flight(
+                flightDTO.getId(),
+                flightDTO.getJourneyId(), null,
+                flightDTO.getSpaceshipId(), null
+        );
         flightService.createFlight(flight);
     }
 
@@ -44,7 +53,12 @@ public class FlightController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateFlight(@PathVariable("id") Long id, @RequestBody Flight flight) {
+    public void updateFlight(@PathVariable("id") Long id, @RequestBody FlightDTO flightDTO) {
+        Flight flight = new Flight(
+                flightDTO.getId(),
+                flightDTO.getJourneyId(), null,
+                flightDTO.getSpaceshipId(), null
+        );
         flightService.updateFlight(id, flight);
     }
 
@@ -55,4 +69,11 @@ public class FlightController {
     public void deleteFlight(@PathVariable("id") Long id) {
         flightService.deleteFlight(id);
     }
+}
+
+@Data
+class FlightDTO {
+    private Long id;
+    private Long journeyId;
+    private Long spaceshipId;
 }

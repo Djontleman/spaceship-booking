@@ -1,5 +1,9 @@
 package com.djontleman.spacebooking.spaceship;
 
+import com.djontleman.spacebooking.flight.Flight;
+import com.djontleman.spacebooking.genericspaceship.GenericSpaceship;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +26,13 @@ public class SpaceshipController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createSpaceship(@RequestBody Spaceship spaceship) {
+    public void createSpaceship(@RequestBody SpaceshipDTO spaceshipDTO) {
+        Spaceship spaceship = new Spaceship(
+                spaceshipDTO.getId(),
+                spaceshipDTO.getCallSign(),
+                spaceshipDTO.getGenericSpaceshipId(), null,
+                null
+        );
         spaceshipService.createSpaceship(spaceship);
     }
 
@@ -44,7 +54,13 @@ public class SpaceshipController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateSpaceship(@PathVariable("id") Long id, @RequestBody Spaceship spaceship) {
+    public void updateSpaceship(@PathVariable("id") Long id, @RequestBody SpaceshipDTO spaceshipDTO) {
+        Spaceship spaceship = new Spaceship(
+                spaceshipDTO.getId(),
+                spaceshipDTO.getCallSign(),
+                spaceshipDTO.getGenericSpaceshipId(), null,
+                null
+        );
         spaceshipService.updateSpaceship(id, spaceship);
     }
 
@@ -55,4 +71,11 @@ public class SpaceshipController {
     public void deleteSpaceship(@PathVariable("id") Long id) {
         spaceshipService.deleteSpaceship(id);
     }
+}
+
+@Data
+class SpaceshipDTO {
+    private Long id;
+    private String callSign;
+    private Long genericSpaceshipId;
 }
