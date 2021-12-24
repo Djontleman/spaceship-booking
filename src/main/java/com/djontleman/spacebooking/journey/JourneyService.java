@@ -117,6 +117,14 @@ public class JourneyService {
         if (journey.isEmpty()) {
             throw new ResourceNotFoundException("No journey with ID: " + id);
         }
+
+        List<Flight> flightList = flightDAO.getFlightsByJourneyId(id);
+        if (flightList.size() > 0) {
+            throw new BadRequestException(
+                    "Cannot delete as journey with ID: " + id + " has been assigned to flights"
+            );
+        }
+
         return journeyDAO.deleteJourney(id);
     }
 }

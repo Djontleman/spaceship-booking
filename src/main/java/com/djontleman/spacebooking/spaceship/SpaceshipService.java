@@ -128,6 +128,14 @@ public class SpaceshipService {
         if (spaceship.isEmpty()) {
             throw new ResourceNotFoundException("No spaceship with ID: " + id);
         }
+
+        List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(id);
+        if (flightList.size() > 0) {
+            throw new BadRequestException(
+                    "Cannot delete as spaceship with ID: " + id + " has been assigned to flights"
+            );
+        }
+
         return spaceshipDAO.deleteSpaceship(id);
     }
 }
