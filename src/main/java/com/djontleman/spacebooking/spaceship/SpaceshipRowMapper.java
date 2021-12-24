@@ -15,6 +15,7 @@ public class SpaceshipRowMapper implements RowMapper {
                 rs.getLong("id"),
                 rs.getString("call_sign"),
                 rs.getLong("generic_spaceship_id"),
+                null,
                 null
         );
     }

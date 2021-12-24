@@ -15,7 +15,8 @@ public class FlightRowMapper implements RowMapper {
                 rs.getLong("id"),
                 rs.getLong("journey_id"),
                 null,
-                rs.getLong("spaceship_id")
+                rs.getLong("spaceship_id"),
+                null
         );
     }
 }

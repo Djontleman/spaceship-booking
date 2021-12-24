@@ -1,6 +1,7 @@
 package com.djontleman.spacebooking.flight;
 
 import com.djontleman.spacebooking.journey.Journey;
+import com.djontleman.spacebooking.spaceship.Spaceship;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -17,5 +18,7 @@ public class Flight {
     @JsonIgnoreProperties({"id", "flightList"})
     private Journey journey;
     private Long spaceshipId;
+    @JsonIgnoreProperties({"id", "flightList"})
+    private Spaceship spaceship;
 
 }
