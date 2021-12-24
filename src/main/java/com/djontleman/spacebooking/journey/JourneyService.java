@@ -5,6 +5,7 @@ import com.djontleman.spacebooking.exception.ResourceNotFoundException;
 import com.djontleman.spacebooking.flight.Flight;
 import com.djontleman.spacebooking.flight.FlightDAO;
 import com.djontleman.spacebooking.spaceship.Spaceship;
+import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,15 @@ public class JourneyService {
 
     private JourneyDAO journeyDAO;
     private FlightDAO flightDAO;
+    private SpaceshipDAO spaceshipDAO;
 
     @Autowired
     public JourneyService(@Qualifier("postgresJourney") JourneyDAO journeyDAO,
-                          @Qualifier("postgresFlight") FlightDAO flightDAO) {
+                          @Qualifier("postgresFlight") FlightDAO flightDAO,
+                          @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO) {
         this.journeyDAO = journeyDAO;
         this.flightDAO = flightDAO;
+        this.spaceshipDAO = spaceshipDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -46,6 +50,12 @@ public class JourneyService {
 
         journeys.forEach(journey -> {
             List<Flight> flightList = flightDAO.getFlightsByJourneyId(journey.getId());
+
+            flightList.forEach(flight -> {
+                Spaceship spaceship = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get();
+                flight.setSpaceship(spaceship);
+            });
+
             journey.setFlightList(flightList);
         });
 
@@ -60,6 +70,10 @@ public class JourneyService {
 
         Journey journey = journeyOptional.get();
         List<Flight> flightList = flightDAO.getFlightsByJourneyId(journey.getId());
+        flightList.forEach(flight -> {
+            Spaceship spaceship = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get();
+            flight.setSpaceship(spaceship);
+        });
         journey.setFlightList(flightList);
 
         return Optional.of(journey);
