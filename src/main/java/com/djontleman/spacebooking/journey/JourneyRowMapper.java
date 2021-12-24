@@ -14,7 +14,8 @@ public class JourneyRowMapper implements RowMapper {
         return new Journey(
                 rs.getLong("id"),
                 rs.getString("origin"),
-                rs.getString("destination")
+                rs.getString("destination"),
+                null
         );
     }
 }
