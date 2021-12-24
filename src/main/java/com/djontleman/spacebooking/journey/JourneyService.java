@@ -4,6 +4,8 @@ import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
 import com.djontleman.spacebooking.flight.Flight;
 import com.djontleman.spacebooking.flight.FlightDAO;
+import com.djontleman.spacebooking.genericspaceship.GenericSpaceship;
+import com.djontleman.spacebooking.genericspaceship.GenericSpaceshipDAO;
 import com.djontleman.spacebooking.spaceship.Spaceship;
 import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +21,17 @@ public class JourneyService {
     private JourneyDAO journeyDAO;
     private FlightDAO flightDAO;
     private SpaceshipDAO spaceshipDAO;
+    private GenericSpaceshipDAO genericSpaceshipDAO;
 
     @Autowired
     public JourneyService(@Qualifier("postgresJourney") JourneyDAO journeyDAO,
                           @Qualifier("postgresFlight") FlightDAO flightDAO,
-                          @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO) {
+                          @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO,
+                          @Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO) {
         this.journeyDAO = journeyDAO;
         this.flightDAO = flightDAO;
         this.spaceshipDAO = spaceshipDAO;
+        this.genericSpaceshipDAO = genericSpaceshipDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -53,6 +58,9 @@ public class JourneyService {
 
             flightList.forEach(flight -> {
                 Spaceship spaceship = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get();
+                spaceship.setGenericSpaceship(
+                        genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
+                );
                 flight.setSpaceship(spaceship);
             });
 
@@ -72,6 +80,9 @@ public class JourneyService {
         List<Flight> flightList = flightDAO.getFlightsByJourneyId(journey.getId());
         flightList.forEach(flight -> {
             Spaceship spaceship = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId()).get();
+            spaceship.setGenericSpaceship(
+                    genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId()).get()
+            );
             flight.setSpaceship(spaceship);
         });
         journey.setFlightList(flightList);
