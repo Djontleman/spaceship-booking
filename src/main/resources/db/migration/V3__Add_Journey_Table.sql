@@ -1,0 +1,5 @@
+CREATE TABLE journeys (
+id BIGSERIAL PRIMARY KEY,
+origin TEXT NOT NULL,
+destination TEXT NOT NULL
+);
