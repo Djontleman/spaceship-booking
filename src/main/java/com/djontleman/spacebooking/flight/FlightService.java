@@ -3,6 +3,7 @@ package com.djontleman.spacebooking.flight;
 import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
 import com.djontleman.spacebooking.genericspaceship.GenericSpaceshipDAO;
+import com.djontleman.spacebooking.journey.Journey;
 import com.djontleman.spacebooking.journey.JourneyDAO;
 import com.djontleman.spacebooking.spaceship.Spaceship;
 import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
@@ -41,7 +42,10 @@ public class FlightService {
         } else if (flight.getJourneyId() <= 0) {
             throw new BadRequestException("Journey ID cannot be zero or less");
         } else {
-            journeyDAO.getJourneyById(flight.getJourneyId());
+            Optional<Journey> journeyOptional = journeyDAO.getJourneyById(flight.getJourneyId());
+            if (journeyOptional.isEmpty()) {
+                throw new ResourceNotFoundException("No journey with ID: " + flight.getJourneyId());
+            }
         }
 
         if (flight.getSpaceshipId() == null) {
@@ -49,7 +53,10 @@ public class FlightService {
         } else if (flight.getSpaceshipId() <= 0) {
             throw new BadRequestException("Spaceship ID cannot be zero or less");
         } else {
-            spaceshipDAO.getSpaceshipById(flight.getSpaceshipId());
+            Optional<Spaceship> spaceshipOptional = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId());
+            if (spaceshipOptional.isEmpty()) {
+                throw new ResourceNotFoundException("No spaceship with ID: " + flight.getSpaceshipId());
+            }
         }
 
         return flightDAO.createFlight(flight);
@@ -104,7 +111,10 @@ public class FlightService {
         } else if (flight.getJourneyId() <= 0) {
             throw new BadRequestException("Journey ID cannot be zero or less");
         } else {
-            journeyDAO.getJourneyById(flight.getJourneyId());
+            Optional<Journey> journeyOptional = journeyDAO.getJourneyById(flight.getJourneyId());
+            if (journeyOptional.isEmpty()) {
+                throw new ResourceNotFoundException("No journey with ID: " + flight.getJourneyId());
+            }
         }
 
         if (flight.getSpaceshipId() == null) {
@@ -112,7 +122,10 @@ public class FlightService {
         } else if (flight.getSpaceshipId() <= 0) {
             throw new BadRequestException("Spaceship ID cannot be zero or less");
         } else {
-            spaceshipDAO.getSpaceshipById(flight.getSpaceshipId());
+            Optional<Spaceship> spaceshipOptional = spaceshipDAO.getSpaceshipById(flight.getSpaceshipId());
+            if (spaceshipOptional.isEmpty()) {
+                throw new ResourceNotFoundException("No spaceship with ID: " + flight.getSpaceshipId());
+            }
         }
 
         // find old resource

@@ -46,7 +46,13 @@ public class SpaceshipService {
         } else if (spaceship.getGenericSpaceshipId() <= 0) {
             throw new BadRequestException("Generic spaceship ID cannot be zero or less");
         } else {
-            genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId());
+            Optional<GenericSpaceship> genericSpaceshipOptional =
+                    genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId());
+            if (genericSpaceshipOptional.isEmpty()) {
+                throw new ResourceNotFoundException(
+                        "No generic spaceship with ID: " + spaceship.getGenericSpaceshipId()
+                );
+            }
         }
 
         return spaceshipDAO.createSpaceship(spaceship);
@@ -109,7 +115,13 @@ public class SpaceshipService {
         } else if (spaceship.getGenericSpaceshipId() <= 0) {
             throw new BadRequestException("Generic spaceship ID cannot be zero or less");
         } else {
-            genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId());
+            Optional<GenericSpaceship> genericSpaceshipOptional =
+                    genericSpaceshipDAO.getGenericSpaceshipById(spaceship.getGenericSpaceshipId());
+            if (genericSpaceshipOptional.isEmpty()) {
+                throw new ResourceNotFoundException(
+                        "No generic spaceship with ID: " + spaceship.getGenericSpaceshipId()
+                );
+            }
         }
 
         // find old resource
