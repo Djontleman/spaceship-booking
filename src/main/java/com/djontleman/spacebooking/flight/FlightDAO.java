@@ -14,6 +14,7 @@ public interface FlightDAO {
     public List<Flight> getAllFlights();
     public Optional<Flight> getFlightById(Long id);
     public List<Flight> getFlightsByJourneyId(Long id);
+    public List<Flight> getFlightsBySpaceshipId(Long id);
 
     // || ====================== Update/PUT/PATCH ====================== ||
 

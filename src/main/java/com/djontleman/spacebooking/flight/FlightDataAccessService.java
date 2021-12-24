@@ -60,6 +60,15 @@ public class FlightDataAccessService implements FlightDAO {
         return jdbcTemplate.query(sql, rowMapper, id);
     }
 
+    @Override
+    public List<Flight> getFlightsBySpaceshipId(Long id) {
+        String sql = """
+                SELECT * FROM flights
+                WHERE spaceship_id = ?;
+                """;
+        return jdbcTemplate.query(sql, rowMapper, id);
+    }
+
     // || ====================== Update/PUT/PATCH ====================== ||
 
     @Override
