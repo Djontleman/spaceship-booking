@@ -51,6 +51,15 @@ public class FlightDataAccessService implements FlightDAO {
                 .findFirst();
     }
 
+    @Override
+    public List<Flight> getFlightsByJourneyId(Long id) {
+        String sql = """
+                SELECT * FROM flights
+                WHERE journey_id = ?;
+                """;
+        return jdbcTemplate.query(sql, rowMapper, id);
+    }
+
     // || ====================== Update/PUT/PATCH ====================== ||
 
     @Override
