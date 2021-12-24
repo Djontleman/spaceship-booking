@@ -4,6 +4,7 @@ import com.djontleman.spacebooking.exception.BadRequestException;
 import com.djontleman.spacebooking.exception.ResourceNotFoundException;
 import com.djontleman.spacebooking.flight.Flight;
 import com.djontleman.spacebooking.flight.FlightDAO;
+import com.djontleman.spacebooking.journey.JourneyDAO;
 import com.djontleman.spacebooking.spaceship.Spaceship;
 import com.djontleman.spacebooking.spaceship.SpaceshipDAO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,17 @@ public class GenericSpaceshipService {
     private GenericSpaceshipDAO genericSpaceshipDAO;
     private SpaceshipDAO spaceshipDAO;
     private FlightDAO flightDAO;
+    private JourneyDAO journeyDAO;
 
     @Autowired
     public GenericSpaceshipService(@Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO,
                                    @Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO,
-                                   @Qualifier("postgresFlight") FlightDAO flightDAO) {
+                                   @Qualifier("postgresFlight") FlightDAO flightDAO,
+                                   @Qualifier("postgresJourney") JourneyDAO journeyDAO) {
         this.genericSpaceshipDAO = genericSpaceshipDAO;
         this.spaceshipDAO = spaceshipDAO;
         this.flightDAO = flightDAO;
+        this.journeyDAO = journeyDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -58,6 +62,13 @@ public class GenericSpaceshipService {
 
             spaceshipList.forEach(spaceship -> {
                 List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+
+                flightList.forEach(flight -> {
+                    flight.setJourney(
+                            journeyDAO.getJourneyById(flight.getJourneyId()).get()
+                    );
+                });
+
                 spaceship.setFlightList(flightList);
             });
 
@@ -78,6 +89,11 @@ public class GenericSpaceshipService {
 
         spaceshipList.forEach(spaceship -> {
             List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+            flightList.forEach(flight -> {
+                flight.setJourney(
+                        journeyDAO.getJourneyById(flight.getJourneyId()).get()
+                );
+            });
             spaceship.setFlightList(flightList);
         });
 
