@@ -16,9 +16,9 @@ import java.util.Optional;
 @Service
 public class GenericSpaceshipService {
 
-    public GenericSpaceshipDAO genericSpaceshipDAO;
-    public SpaceshipDAO spaceshipDAO;
-    public FlightDAO flightDAO;
+    private GenericSpaceshipDAO genericSpaceshipDAO;
+    private SpaceshipDAO spaceshipDAO;
+    private FlightDAO flightDAO;
 
     @Autowired
     public GenericSpaceshipService(@Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO,

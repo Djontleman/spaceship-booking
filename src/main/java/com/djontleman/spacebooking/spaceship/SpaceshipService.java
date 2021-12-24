@@ -6,6 +6,7 @@ import com.djontleman.spacebooking.flight.Flight;
 import com.djontleman.spacebooking.flight.FlightDAO;
 import com.djontleman.spacebooking.genericspaceship.GenericSpaceship;
 import com.djontleman.spacebooking.genericspaceship.GenericSpaceshipDAO;
+import com.djontleman.spacebooking.journey.JourneyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -16,17 +17,21 @@ import java.util.Optional;
 @Service
 public class SpaceshipService {
 
-    public SpaceshipDAO spaceshipDAO;
-    public GenericSpaceshipDAO genericSpaceshipDAO;
-    public FlightDAO flightDAO;
+    private SpaceshipDAO spaceshipDAO;
+    private GenericSpaceshipDAO genericSpaceshipDAO;
+    private FlightDAO flightDAO;
+    private JourneyDAO journeyDAO;
+
 
     @Autowired
     public SpaceshipService(@Qualifier("postgresSpaceship") SpaceshipDAO spaceshipDAO,
                             @Qualifier("postgresGenericSpaceship") GenericSpaceshipDAO genericSpaceshipDAO,
-                            @Qualifier("postgresFlight") FlightDAO flightDAO) {
+                            @Qualifier("postgresFlight") FlightDAO flightDAO,
+                            @Qualifier("postgresJourney") JourneyDAO journeyDAO) {
         this.spaceshipDAO = spaceshipDAO;
         this.genericSpaceshipDAO = genericSpaceshipDAO;
         this.flightDAO = flightDAO;
+        this.journeyDAO = journeyDAO;
     }
 
     // || ====================== Create/POST ====================== ||
@@ -58,6 +63,11 @@ public class SpaceshipService {
             );
 
             List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+            flightList.forEach(flight -> {
+                flight.setJourney(
+                        journeyDAO.getJourneyById(flight.getJourneyId()).get()
+                );
+            });
             spaceship.setFlightList(flightList);
         });
 
@@ -76,6 +86,11 @@ public class SpaceshipService {
         );
 
         List<Flight> flightList = flightDAO.getFlightsBySpaceshipId(spaceship.getId());
+        flightList.forEach(flight -> {
+            flight.setJourney(
+                    journeyDAO.getJourneyById(flight.getJourneyId()).get()
+            );
+        });
         spaceship.setFlightList(flightList);
 
         return Optional.of(spaceship);
