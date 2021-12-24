@@ -42,8 +42,8 @@ public class SpaceshipController {
 
     // || ====================== Update/PUT/PATCH ====================== ||
 
-    @PostMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateSpaceship(@PathVariable("id") Long id, @RequestBody Spaceship spaceship) {
         spaceshipService.updateSpaceship(id, spaceship);
     }
@@ -51,7 +51,7 @@ public class SpaceshipController {
     // || ====================== Delete/DELETE ====================== ||
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSpaceship(@PathVariable("id") Long id) {
         spaceshipService.deleteSpaceship(id);
     }

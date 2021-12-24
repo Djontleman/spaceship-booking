@@ -45,8 +45,8 @@ public class GenericSpaceshipController {
 
     // || ====================== Update/PUT/PATCH ====================== ||
 
-    @PostMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateGenericSpaceship(@PathVariable("id") Long id, @RequestBody GenericSpaceship genericSpaceship) {
         genericSpaceshipService.updateGenericSpaceship(id, genericSpaceship);
     }
@@ -54,7 +54,7 @@ public class GenericSpaceshipController {
     // || ====================== Delete/DELETE ====================== ||
 
     @DeleteMapping("{id}")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteGenericSpaceship(@PathVariable("id") Long id) {
         genericSpaceshipService.deleteGenericSpaceship(id);
     }
