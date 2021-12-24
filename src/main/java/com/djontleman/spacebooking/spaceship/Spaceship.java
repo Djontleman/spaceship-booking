@@ -19,6 +19,6 @@ public class Spaceship {
     private Long genericSpaceshipId;
     @JsonIgnoreProperties({"id", "spaceshipsList"})
     private GenericSpaceship genericSpaceship;
-    @JsonIgnoreProperties("spaceship")
+    @JsonIgnoreProperties({"spaceshipId", "spaceship"})
     private List<Flight> flightList;
 }

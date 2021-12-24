@@ -17,7 +17,7 @@ public class Journey {
     private Long id;
     private String origin;
     private String destination;
-    @JsonIgnoreProperties({"journey"})
+    @JsonIgnoreProperties({"journeyId", "journey"})
     private List<Flight> flightList;
 
 }
